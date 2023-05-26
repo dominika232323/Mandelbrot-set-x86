@@ -72,7 +72,7 @@ void initializeOpenGL(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
     glutInitWindowSize(imageWidth, imageHeight);
-    glutCreateWindow("Red BMP Image");
+    glutCreateWindow("Mandelbrot set");
     glutDisplayFunc(renderScene);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     gluOrtho2D(0, imageWidth, 0, imageHeight);
