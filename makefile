@@ -1,19 +1,16 @@
-CC=gcc
-ASMBIN=nasm
+CC = g++
+CFLAGS = -std=c++11 -Wall -Wextra
+LDFLAGS = -lGL -lGLU -lglut
 
-all : asm cc link
+TARGET = bmp_opengl
 
-asm :
-	$(ASMBIN) -o func.o -f elf -g -l func.lst func.asm
-cc :
-	$(CC) -m32 -c -g -O0 main.c -std=c99
-link :
-	$(CC) -m32 -g -o program main.o func.o
-gdbb :
-	gdb program
+all: $(TARGET)
 
-clean :
-	rm *.o
-	rm program
-	rm func.lst
-debug : all gdbb
+$(TARGET): main.o
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+
+main.o: main.cpp
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f *.o $(TARGET)
