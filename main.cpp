@@ -23,6 +23,8 @@ struct BMPHeader {
 };
 #pragma pack(pop)
 
+extern "C" void mandelbrot(unsigned char* imageData, int imageWidth, int imageHeight);
+
 unsigned char* imageData;
 int imageWidth, imageHeight;
 
@@ -54,12 +56,14 @@ void loadBMP(const char* filename) {
     file.read(reinterpret_cast<char*>(imageData), imageWidth * imageHeight * 3);
     file.close();
 
-    // Change pixel colors to red
-    for (int i = 0; i < imageWidth * imageHeight; ++i) {
-        imageData[i * 3] = 255;     // Set red component to maximum
-        imageData[i * 3 + 1] = 0;   // Set green component to minimum
-        imageData[i * 3 + 2] = 0;   // Set blue component to minimum
-    }
+    // // Change pixel colors to red
+    // for (int i = 0; i < imageWidth * imageHeight; ++i) {
+    //     imageData[i * 3] = 255;     // Set red component to maximum
+    //     imageData[i * 3 + 1] = 0;   // Set green component to minimum
+    //     imageData[i * 3 + 2] = 0;   // Set blue component to minimum
+    // }
+
+    mandelbrot(imageData, imageWidth, imageHeight);
 }
 
 void renderScene() {
