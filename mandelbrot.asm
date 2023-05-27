@@ -135,19 +135,20 @@ end_mandel:
 
     movq r10, xmm4
 
-    sub r12, r10
+    mov rax, r12
+    sub rax, r10
 
 store:
     ; store blue
-    mov byte [rdi], 255
+    mov [rdi], rax
 
     ; store green
     inc rdi
-    mov byte [rdi], 255
+    mov [rdi], rax
 
     ; store red
     inc rdi
-    mov byte [rdi], 255
+    mov [rdi], rax
 
     inc rdi
 
