@@ -74,7 +74,7 @@ count_complex_number:
 mandel:
     xorpd xmm2, xmm2        ; xmm2 - z real part
     xorpd xmm3, xmm3        ; xmm3 - z imaginary part
-    mov r10, 0              ; r10 - n
+    mov rax, 0              ; rax - n
 
 mandel_loop:
     ; xmm5 = abs(z)^2 = xmm2^2 + xmm3^2
@@ -93,7 +93,7 @@ mandel_loop:
     jg end_mandel
 
     mov r12, 80
-    cmp r10, r12
+    cmp rax, r12
     jge end_mandel
 
     ; z = z*z + c
@@ -117,13 +117,19 @@ mandel_loop:
     addsd xmm3, xmm1
 
     ; n += 1
-    inc r10
+    inc rax
     jmp mandel_loop
 
 end_mandel:
     ; grey scale color
 	; color = 255 - int(m * 255 / MAX_ITER)
+    mov r12, 255
+    imul rax, r12
 
+    mov r10, 80
+    idiv r10
+
+    sub rax, r12
 
 store:
     ; store blue
