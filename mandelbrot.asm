@@ -1,3 +1,7 @@
+section .data
+    ONE dq 1.0
+
+
 section .text
 global mandelbrot
 
@@ -34,7 +38,38 @@ width_loop:
     cmp r11, rsi
     jge next_height
 
-    ; complex nums
+count_complex_number:
+    ; xmm0 = -2 + (r11 / rsi) * (1 - (-2))
+    movq xmm0, r11
+    movq xmm1, rsi
+    divsd xmm0, xmm1
+
+    mov r12, 1
+    movq xmm1, r12
+
+    mov r12, -2
+    movq xmm2, r12
+
+    subsd xmm1, xmm2
+
+    mulsd xmm0, xmm1
+    addsd xmm0, xmm2
+
+    ; xmm1 = -1 + (r8 / rdx) * (1 - (-1))
+    movq xmm1, r8
+    movq xmm2, rdx
+    divsd xmm1, xmm2
+
+    mov r12, 1
+    movq xmm2, r12
+
+    mov r12, -1
+    movq xmm3, r12
+
+    subsd xmm2, xmm3
+
+    mulsd xmm1, xmm2
+    addsd xmm1, xmm3
 
 store:
     ; store blue
