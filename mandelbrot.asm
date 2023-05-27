@@ -137,18 +137,19 @@ end_mandel:
 
     mov rax, r12
     sub rax, r10
+    mov r10, rax
 
 store:
     ; store blue
-    mov [rdi], rax
+    mov [rdi], r10
 
     ; store green
     inc rdi
-    mov [rdi], rax
+    mov [rdi], r10
 
     ; store red
     inc rdi
-    mov [rdi], rax
+    mov [rdi], r10
 
     inc rdi
 
