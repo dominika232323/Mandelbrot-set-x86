@@ -124,12 +124,18 @@ end_mandel:
     ; grey scale color
 	; color = 255 - int(m * 255 / MAX_ITER)
     mov r12, 255
-    imul rax, r12
+    movq xmm6, r12
+    movq xmm4, rax
+
+    mulsd xmm4, xmm6
 
     mov r10, 80
-    idiv r10
+    movq xmm6, r10
+    divsd xmm4, xmm6
 
-    sub rax, r12
+    movq r10, xmm4
+
+    sub r12, r10
 
 store:
     ; store blue
