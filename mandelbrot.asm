@@ -71,6 +71,39 @@ count_complex_number:
     mulsd xmm1, xmm2
     addsd xmm1, xmm3
 
+mandel:
+    xorpd xmm2, xmm2        ; xmm2 - z real part
+    xorpd xmm3, xmm3        ; xmm3 - z imaginary part
+    mov r10, 0              ; r10 - n
+
+mandel_loop:
+    ; xmm5 = abs(z)^2 = xmm2^2 + xmm3^2
+    movq xmm5, xmm2
+    mulsd xmm5, xmm2
+
+    movq xmm6, xmm3
+    mulsd xmm6, xmm3
+
+    addsd xmm5, xmm6
+
+    ; do mandel_loop while abs(z) <= 2 and n < 80
+    mov r12, 4
+    movq xmm6, r12
+    ucomisd xmm5, xmm6
+    jg end_mandel
+
+    mov r12, 80
+    cmp r10, r12
+    jge end_mandel
+
+    ; z = z*z + c
+    ; xmm2 = xmm2^2 - xmm3^2 + xmm0
+
+
+    ; xmm3 = 2 * xmm2 * xmm3 + xmm1
+
+end_mandel:
+
 store:
     ; store blue
     mov byte [rdi], 255
