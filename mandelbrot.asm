@@ -9,20 +9,22 @@ mandelbrot:
     ; rsi - imageWidth
     ; rdx - imageHeight
 
-    mov al, 255
+padding:
+    mov rax, rsi
+    imul rax, rdi
+    imul rax, 3
+    mov r10, rax        ; r10 - imageSize
 
-loopm:
-    test rsi, rsi
-    jz end
+    mov r8, 0b0011
+    mov rax, r10
+    and rax, r8
 
-    mov byte [rdi], al
-    inc rdi
-    mov byte [rdi], al
-    inc rdi
-    mov byte [rdi], al
-    inc rdi
-    dec rsi
-    jmp loopm
+    mov r9, 4
+    sub rax, r9
+    imul rax, -1
+
+    and rax, r8
+    mov r9, rax         ; r9 - padding
 
 end:
 
