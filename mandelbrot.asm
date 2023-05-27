@@ -98,7 +98,15 @@ mandel_loop:
 
     ; z = z*z + c
     ; xmm2 = xmm2^2 - xmm3^2 + xmm0
+    movq xmm4, xmm2         ; save old xmm2
 
+    mulsd xmm2, xmm2
+
+    movq xmm6, xmm3
+    mulsd xmm6, xmm3
+
+    subsd xmm2, xmm6
+    addsd xmm2, xmm0
 
     ; xmm3 = 2 * xmm2 * xmm3 + xmm1
 
