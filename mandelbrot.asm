@@ -109,8 +109,21 @@ mandel_loop:
     addsd xmm2, xmm0
 
     ; xmm3 = 2 * xmm2 * xmm3 + xmm1
+    mov r12, 2
+    movq xmm6, r12
+
+    mulsd xmm3, xmm6
+    mulsd xmm3, xmm4
+    addsd xmm3, xmm1
+
+    ; n += 1
+    inc r10
+    jmp mandel_loop
 
 end_mandel:
+    ; grey scale color
+	; color = 255 - int(m * 255 / MAX_ITER)
+
 
 store:
     ; store blue
