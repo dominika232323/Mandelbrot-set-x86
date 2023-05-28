@@ -30,7 +30,6 @@ extern "C" void mandelbrot(unsigned char* imageData, int imageWidth, int imageHe
 
 unsigned char* imageData;
 int imageWidth, imageHeight;
-float zoomFactor = 1.0f;
 
 
 void loadBMP(const char* filename) {
