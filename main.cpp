@@ -30,7 +30,7 @@ extern "C" void mandelbrot(unsigned char* imageData, int imageWidth, int imageHe
 
 unsigned char* imageData;
 int imageWidth, imageHeight;
-float zoomFactor = 1.0f;
+float zoomFactor = 1.0;
 
 
 void loadBMP(const char* filename) {
@@ -65,63 +65,51 @@ void loadBMP(const char* filename) {
 }
 
 
-void renderScene() {
-    printf("koooooooooooooooko");
+void display() {
+    glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, zoomFactor * imageWidth, 0, zoomFactor * imageHeight);
+
+    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    // Apply zoom
+    glRasterPos2i(0, 0);
+    glPixelZoom(zoomFactor, zoomFactor);
+    glDrawPixels(imageWidth, imageHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, imageData);
 
-
-    // Calculate translated center position
-    float centerX = static_cast<float>(imageWidth) / 2.0f;
-    float centerY = static_cast<float>(imageHeight) / 2.0f;
-
-    // Translate to the center
-    glTranslatef(-centerX, -centerY, 0.0f);
-
-    // Draw the image
-    glDrawPixels(imageWidth, imageHeight, GL_RGB, GL_UNSIGNED_BYTE, imageData);
-    glScalef(zoomFactor, zoomFactor, 1.0f);
     glFlush();
 }
 
 
-void keyboardFunc(unsigned char key, int x, int y) {
+void keyboard(unsigned char key, int x, int y) {
     switch (key) {
-        case '+': // Zoom-in
-            zoomFactor *= 1.1f;
-            printf("%f\n", zoomFactor);
+        case '+':  // Zoom in
+            zoomFactor += 0.1;
+            glutPostRedisplay();
             break;
-        case '-': // Zoom-out
-            zoomFactor /= 1.1f;
+        case '-':  // Zoom out
+            zoomFactor -= 0.1;
+            if (zoomFactor < 0.1)
+                zoomFactor = 0.1;
+            glutPostRedisplay();
+            break;
+        case 27:  // ESC key to exit
+            delete[] imageData;
+            exit(0);
             break;
     }
-    glutPostRedisplay();
-}
-
-
-void displayFunc() {
-    printf("aasaaaa");
-    renderScene();
-    glutSwapBuffers();
-}
-
-
-void initializeOpenGL(int argc, char** argv) {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
-    glutInitWindowSize(imageWidth, imageHeight);
-    glutCreateWindow("Mandelbrot set");
-    glutKeyboardFunc(keyboardFunc);
-    glutDisplayFunc(displayFunc);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    gluOrtho2D(0, imageWidth, 0, imageHeight);
-    glutMainLoop();
 }
 
 
 int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(imageWidth, imageHeight);
+    glutCreateWindow("Mandelbrot set");
+
     // char filename[100];
     const char* filename = "lena.bmp";
     // /mnt/c/Users/domin/Desktop/studia/sem2_23L/ARKO/x86/Mandelbrot-set-x86/lena.bmp
@@ -131,7 +119,11 @@ int main(int argc, char** argv) {
     // scanf("%s", filename);
 
     loadBMP(filename);
-    initializeOpenGL(argc, argv);
+
+    glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
+
+    glutMainLoop();
 
     delete[] imageData;
     return 0;
