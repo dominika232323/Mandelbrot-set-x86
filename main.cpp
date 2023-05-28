@@ -66,11 +66,12 @@ void loadBMP(const char* filename) {
 
 
 void renderScene() {
+    printf("koooooooooooooooko");
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
 
     // Apply zoom
-    glScalef(zoomFactor, zoomFactor, 1.0f);
+
 
     // Calculate translated center position
     float centerX = static_cast<float>(imageWidth) / 2.0f;
@@ -81,6 +82,7 @@ void renderScene() {
 
     // Draw the image
     glDrawPixels(imageWidth, imageHeight, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+    glScalef(zoomFactor, zoomFactor, 1.0f);
     glFlush();
 }
 
@@ -89,6 +91,7 @@ void keyboardFunc(unsigned char key, int x, int y) {
     switch (key) {
         case '+': // Zoom-in
             zoomFactor *= 1.1f;
+            printf("%f\n", zoomFactor);
             break;
         case '-': // Zoom-out
             zoomFactor /= 1.1f;
@@ -98,13 +101,20 @@ void keyboardFunc(unsigned char key, int x, int y) {
 }
 
 
+void displayFunc() {
+    printf("aasaaaa");
+    renderScene();
+    glutSwapBuffers();
+}
+
+
 void initializeOpenGL(int argc, char** argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
     glutInitWindowSize(imageWidth, imageHeight);
     glutCreateWindow("Mandelbrot set");
     glutKeyboardFunc(keyboardFunc);
-    glutDisplayFunc(renderScene);
+    glutDisplayFunc(displayFunc);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     gluOrtho2D(0, imageWidth, 0, imageHeight);
     glutMainLoop();
@@ -112,12 +122,13 @@ void initializeOpenGL(int argc, char** argv) {
 
 
 int main(int argc, char** argv) {
-    char filename[100];
+    // char filename[100];
+    const char* filename = "lena.bmp";
     // /mnt/c/Users/domin/Desktop/studia/sem2_23L/ARKO/x86/Mandelbrot-set-x86/lena.bmp
 
-    printf("Welcome to mandelbrot set generator!\n");
-    printf("Give the absolute path to the bmp file that you want to change to mandelbrot set: ");
-    scanf("%s", filename);
+    // printf("Welcome to mandelbrot set generator!\n");
+    // printf("Give the absolute path to the bmp file that you want to change to mandelbrot set: ");
+    // scanf("%s", filename);
 
     loadBMP(filename);
     initializeOpenGL(argc, argv);
