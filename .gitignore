@@ -1,3 +1,4 @@
 bmp_opengl
 main.o
 mandelbrot.o
+.vscode/

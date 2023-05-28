@@ -1,7 +1,3 @@
-section .data
-    ONE dq 1.0
-
-
 section .text
 global mandelbrot
 
