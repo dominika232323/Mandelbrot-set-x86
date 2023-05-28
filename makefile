@@ -1,21 +1,16 @@
 CC = g++
 ASMBIN = nasm
-CFLAGS = -std=c++11 -Wall -m64 -no-pie
 LDFLAGS = -lGL -lGLU -lglut
 
 all : asm cc link
 
 asm :
-	$(ASMBIN) -o mandelbrot.o -f elf64 -g -l mandelbrot.lst mandelbrot.asm
-
+	$(ASMBIN) -o mandelbrot.o -f elf64 -g -F dwarf mandelbrot.asm
 cc :
-	$(CC) $(CFLAGS) -c -g -O0 main.cpp -lm
-
+	$(CC) -m64 -c -g -O0 main.cpp
 link :
-	$(CC) $(CFLAGS) -g -o mandel_set main.o mandelbrot.o $(LDFLAGS)
+	$(CC) -m64 -g -o mandel main.o mandelbrot.o $(LDFLAGS)
 
-gdb :
-	gdb mandel_set
-
-clean:
-	rm -f *.o mandel_set mandelbrot.lst
+clean :
+	rm *.o
+	rm mandel

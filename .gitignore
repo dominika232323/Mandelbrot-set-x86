@@ -1,6 +1,4 @@
-bmp_opengl
 main.o
 mandelbrot.o
 .vscode/
-mandel_set
-mandelbrot.lst
+mandel
