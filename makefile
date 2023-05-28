@@ -1,19 +1,21 @@
 CC = g++
-CFLAGS = -g
+ASMBIN = nasm
+CFLAGS = -Wall -m64 -no-pie
 LDFLAGS = -lGL -lGLU -lglut
 
-TARGET = bmp_opengl
+all : asm cc link
 
-all: $(TARGET)
+asm :
+	$(ASMBIN) -o mandelbrot.o -f elf64 -g -l mandelbrot.lst mandelbrot.asm
 
-$(TARGET): main.o mandelbrot.o
-	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+cc :
+	$(CC) $(CFLAGS) -c -g -O0 main.cpp -std=c11 -lm
 
-main.o: main.cpp
-	$(CC) $(CFLAGS) -c -m64 $< -o $@
+link :
+	$(CC) $(CFLAGS) -g -o bezier main.o mandelbrot.o $(LDFLAGS)
 
-mandelbrot.o: mandelbrot.asm
-	nasm -f elf64 -g -F dwarf -o $@ $<
+gdb :
+	gdb bezier
 
 clean:
-	rm -f *.o $(TARGET)
+	rm -f *.o bezier mandelbrot.lst
