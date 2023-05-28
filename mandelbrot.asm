@@ -36,15 +36,15 @@ width_loop:
 
 count_complex_number:
     ; xmm0 = -2 + (r11 / rsi) * (1 - (-2))
-    movq xmm0, r11
-    movq xmm1, rsi
+    cvtsi2sd xmm0, r11
+    cvtsi2sd xmm1, rsi
     divsd xmm0, xmm1
 
     mov r12, 1
-    movq xmm1, r12
+    cvtsi2sd xmm1, r12
 
     mov r12, -2
-    movq xmm2, r12
+    cvtsi2sd xmm2, r12
 
     subsd xmm1, xmm2
 
@@ -52,15 +52,15 @@ count_complex_number:
     addsd xmm0, xmm2
 
     ; xmm1 = -1 + (r8 / rdx) * (1 - (-1))
-    movq xmm1, r8
-    movq xmm2, rdx
+    cvtsi2sd xmm1, r8
+    cvtsi2sd xmm2, rdx
     divsd xmm1, xmm2
 
     mov r12, 1
-    movq xmm2, r12
+    cvtsi2sd xmm2, r12
 
     mov r12, -1
-    movq xmm3, r12
+    cvtsi2sd xmm3, r12
 
     subsd xmm2, xmm3
 
@@ -84,7 +84,7 @@ mandel_loop:
 
     ; do mandel_loop while abs(z) <= 2 and n < 80
     mov r12, 4
-    movq xmm6, r12
+    cvtsi2sd xmm6, r12
     ucomisd xmm5, xmm6
     jg end_mandel
 
@@ -106,7 +106,7 @@ mandel_loop:
 
     ; xmm3 = 2 * xmm2 * xmm3 + xmm1
     mov r12, 2
-    movq xmm6, r12
+    cvtsi2sd xmm6, r12
 
     mulsd xmm3, xmm6
     mulsd xmm3, xmm4
@@ -120,32 +120,32 @@ end_mandel:
     ; grey scale color
 	; color = 255 - int(m * 255 / MAX_ITER)
     mov r12, 255
-    movq xmm6, r12
-    movq xmm4, rax
+    cvtsi2sd xmm6, r12
+    cvtsi2sd xmm4, rax
 
     mulsd xmm4, xmm6
 
     mov r10, 80
-    movq xmm6, r10
+    cvtsi2sd xmm6, r10
     divsd xmm4, xmm6
 
-    movq r10, xmm4
+    cvtsd2si r10, xmm4
 
     mov rax, r12
     sub rax, r10
     mov r10, rax
 
 store:
-    ; store blue
-    mov [rdi], r10
+    ; store red
+    mov byte [rdi], 255
 
     ; store green
     inc rdi
-    mov [rdi], r10
+    mov byte [rdi], 0
 
-    ; store red
+    ; store blue
     inc rdi
-    mov [rdi], r10
+    mov byte [rdi], 0
 
     inc rdi
 
