@@ -78,6 +78,7 @@ void initializeOpenGL(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
+    // const char* filename = "lena.bmp";
     char filename[100];
     // /mnt/c/Users/domin/Desktop/studia/sem2_23L/ARKO/x86/Mandelbrot-set-x86/lena.bmp
 
