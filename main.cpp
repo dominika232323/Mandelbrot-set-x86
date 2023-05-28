@@ -24,10 +24,14 @@ struct BMPHeader {
 };
 #pragma pack(pop)
 
+
 extern "C" void mandelbrot(unsigned char* imageData, int imageWidth, int imageHeight);
+
 
 unsigned char* imageData;
 int imageWidth, imageHeight;
+float zoomFactor = 1.0f;
+
 
 void loadBMP(const char* filename) {
     std::ifstream file(filename, std::ios::binary);
@@ -60,22 +64,52 @@ void loadBMP(const char* filename) {
     mandelbrot(imageData, imageWidth, imageHeight);
 }
 
+
 void renderScene() {
     glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+
+    // Apply zoom
+    glScalef(zoomFactor, zoomFactor, 1.0f);
+
+    // Calculate translated center position
+    float centerX = static_cast<float>(imageWidth) / 2.0f;
+    float centerY = static_cast<float>(imageHeight) / 2.0f;
+
+    // Translate to the center
+    glTranslatef(-centerX, -centerY, 0.0f);
+
+    // Draw the image
     glDrawPixels(imageWidth, imageHeight, GL_RGB, GL_UNSIGNED_BYTE, imageData);
     glFlush();
 }
+
+
+void keyboardFunc(unsigned char key, int x, int y) {
+    switch (key) {
+        case '+': // Zoom-in
+            zoomFactor *= 1.1f;
+            break;
+        case '-': // Zoom-out
+            zoomFactor /= 1.1f;
+            break;
+    }
+    glutPostRedisplay();
+}
+
 
 void initializeOpenGL(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
     glutInitWindowSize(imageWidth, imageHeight);
     glutCreateWindow("Mandelbrot set");
+    glutKeyboardFunc(keyboardFunc);
     glutDisplayFunc(renderScene);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     gluOrtho2D(0, imageWidth, 0, imageHeight);
     glutMainLoop();
 }
+
 
 int main(int argc, char** argv) {
     char filename[100];
@@ -87,6 +121,7 @@ int main(int argc, char** argv) {
 
     loadBMP(filename);
     initializeOpenGL(argc, argv);
+
     delete[] imageData;
     return 0;
 }
