@@ -122,8 +122,9 @@ void initializeOpenGL(int argc, char** argv) {
 
 
 int main(int argc, char** argv) {
-    // char filename[100];
-    const char* filename = "lena.bmp";
+    // const char* filename = "lena.bmp";
+    char filename[100];
+
     // /mnt/c/Users/domin/Desktop/studia/sem2_23L/ARKO/x86/Mandelbrot-set-x86/lena.bmp
 
     // printf("Welcome to mandelbrot set generator!\n");
