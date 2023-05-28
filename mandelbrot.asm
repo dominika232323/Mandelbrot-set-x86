@@ -5,6 +5,10 @@ mandelbrot:
     push rbp
     mov rbp, rsp
 
+    mov rdi, rdi        ; rdi contains the pointer to the char array
+    mov rsi, rsi        ; rsi contains the first integer
+    mov rdx, rdx        ; rdx contains the second integer
+
     ; rdi - pointer to imageData
     ; rsi - imageWidth
     ; rdx - imageHeight
@@ -74,31 +78,34 @@ mandel:
 
 mandel_loop:
     ; xmm5 = abs(z)^2 = xmm2^2 + xmm3^2
-    movq xmm5, xmm2
+    movsd xmm5, xmm2
     mulsd xmm5, xmm2
 
-    movq xmm6, xmm3
+    movsd xmm6, xmm3
     mulsd xmm6, xmm3
 
     addsd xmm5, xmm6
 
+condidtion_abs:
     ; do mandel_loop while abs(z) <= 2 and n < 80
     mov r12, 4
     cvtsi2sd xmm6, r12
-    ucomisd xmm5, xmm6
-    jg end_mandel
+    comisd xmm5, xmm6
+    ja end_mandel
 
+condition_max_iter:
     mov r12, 80
     cmp rax, r12
     jge end_mandel
 
+count_new_z:
     ; z = z*z + c
     ; xmm2 = xmm2^2 - xmm3^2 + xmm0
-    movq xmm4, xmm2         ; save old xmm2
+    movsd xmm4, xmm2         ; save old xmm2
 
     mulsd xmm2, xmm2
 
-    movq xmm6, xmm3
+    movsd xmm6, xmm3
     mulsd xmm6, xmm3
 
     subsd xmm2, xmm6
@@ -133,19 +140,18 @@ end_mandel:
 
     mov rax, r12
     sub rax, r10
-    mov r10, rax
 
 store:
     ; store red
-    mov byte [rdi], 255
+    mov [rdi], rax
 
     ; store green
     inc rdi
-    mov byte [rdi], 0
+    mov [rdi], rax
 
     ; store blue
     inc rdi
-    mov byte [rdi], 0
+    mov [rdi], rax
 
     inc rdi
 

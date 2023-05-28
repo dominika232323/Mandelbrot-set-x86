@@ -1,4 +1,6 @@
+.vscode/
 main.o
 mandelbrot.o
-.vscode/
 mandel
+a.bmp
+color.bmp
