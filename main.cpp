@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <stdio.h>
 #include <GL/glut.h>
 
 #pragma pack(push, 1)
@@ -77,7 +78,13 @@ void initializeOpenGL(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
-    const char* filename = "lena.bmp";
+    char filename[100];
+    // /mnt/c/Users/domin/Desktop/studia/sem2_23L/ARKO/x86/Mandelbrot-set-x86/lena.bmp
+
+    printf("Welcome to mandelbrot set generator!\n");
+    printf("Give the absolute path to the bmp file that you want to change to mandelbrot set: ");
+    scanf("%s", filename);
+
     loadBMP(filename);
     initializeOpenGL(argc, argv);
     delete[] imageData;
