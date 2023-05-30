@@ -4,7 +4,8 @@
 #include <GL/glut.h>
 
 #pragma pack(push, 1)
-struct BMPHeader {
+struct BMPHeader
+{
     char signature[2];
     unsigned int fileSize;
     unsigned short reserved1;
@@ -30,12 +31,15 @@ extern "C" void mandelbrot(unsigned char* imageData, int imageWidth, int imageHe
 
 unsigned char* imageData;
 int imageWidth, imageHeight;
+float zoomFactor = 1.0;
 
 
-void loadBMP(const char* filename) {
+void loadBMP(const char* filename)
+{
     std::ifstream file(filename, std::ios::binary);
 
-    if (!file) {
+    if (!file)
+    {
         std::cerr << "Failed to open BMP file: " << filename << std::endl;
         return;
     }
@@ -43,12 +47,14 @@ void loadBMP(const char* filename) {
     BMPHeader header;
     file.read(reinterpret_cast<char*>(&header), sizeof(BMPHeader));
 
-    if (header.signature[0] != 'B' || header.signature[1] != 'M') {
+    if (header.signature[0] != 'B' || header.signature[1] != 'M')
+    {
         std::cerr << "Invalid BMP file: " << filename << std::endl;
         return;
     }
 
-    if (header.bitsPerPixel != 24) {
+    if (header.bitsPerPixel != 24)
+    {
         std::cerr << "Unsupported BMP format: " << filename << std::endl;
         return;
     }
@@ -64,29 +70,57 @@ void loadBMP(const char* filename) {
 }
 
 
-void renderScene() {
+void display()
+{
+    glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    glDrawPixels(imageWidth, imageHeight, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, zoomFactor * imageWidth, 0, zoomFactor * imageHeight);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glRasterPos2i(0, 0);
+    glPixelZoom(zoomFactor, zoomFactor);
+    glDrawPixels(imageWidth, imageHeight, GL_BGR_EXT, GL_UNSIGNED_BYTE, imageData);
+
     glFlush();
 }
 
 
-void initializeOpenGL(int argc, char** argv) {
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
-    glutInitWindowSize(imageWidth, imageHeight);
-    glutCreateWindow("Mandelbrot set");
-    glutDisplayFunc(renderScene);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    gluOrtho2D(0, imageWidth, 0, imageHeight);
-    glutMainLoop();
+void keyboard(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+        case '+':  // Zoom in
+            {
+                zoomFactor += 0.1;
+                glutPostRedisplay();
+                break;
+            }
+        case '-':  // Zoom out
+            {
+                zoomFactor -= 0.1;
+                if (zoomFactor < 0.1)
+                    zoomFactor = 0.1;
+                glutPostRedisplay();
+                break;
+            }
+    }
 }
 
 
-int main(int argc, char** argv) {
-    // const char* filename = "lena.bmp";
-    char filename[100];
+int main(int argc, char** argv)
+{
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(imageWidth, imageHeight);
+    glutCreateWindow("Mandelbrot set");
 
+    char filename[100];
+    // const char* filename = "lena.bmp";
     // /mnt/c/Users/domin/Desktop/studia/sem2_23L/ARKO/x86/Mandelbrot-set-x86/lena.bmp
 
     printf("Welcome to mandelbrot set generator!\n");
@@ -94,9 +128,12 @@ int main(int argc, char** argv) {
     scanf("%s", filename);
 
     loadBMP(filename);
-    initializeOpenGL(argc, argv);
+
+    glutDisplayFunc(display);
+    glutKeyboardFunc(keyboard);
+
+    glutMainLoop();
 
     delete[] imageData;
-
     return 0;
 }
