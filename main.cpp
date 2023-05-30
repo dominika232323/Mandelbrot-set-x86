@@ -95,19 +95,19 @@ void keyboard(unsigned char key, int x, int y)
     switch (key)
     {
         case '+':  // Zoom in
-            {
-                zoomFactor += 0.1;
-                glutPostRedisplay();
-                break;
-            }
+        {
+            zoomFactor += 0.1;
+            glutPostRedisplay();
+            break;
+        }
         case '-':  // Zoom out
-            {
-                zoomFactor -= 0.1;
-                if (zoomFactor < 0.1)
-                    zoomFactor = 0.1;
-                glutPostRedisplay();
-                break;
-            }
+        {
+            zoomFactor -= 0.1;
+            if (zoomFactor < 0.1)
+                zoomFactor = 0.1;
+            glutPostRedisplay();
+            break;
+        }
     }
 }
 
