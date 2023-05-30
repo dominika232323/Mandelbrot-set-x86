@@ -119,13 +119,13 @@ int main(int argc, char** argv)
     glutInitWindowSize(imageWidth, imageHeight);
     glutCreateWindow("Mandelbrot set");
 
-    // char filename[100];
-    const char* filename = "lena.bmp";
+    char filename[100];
+    // const char* filename = "lena.bmp";
     // /mnt/c/Users/domin/Desktop/studia/sem2_23L/ARKO/x86/Mandelbrot-set-x86/lena.bmp
 
-    // printf("Welcome to mandelbrot set generator!\n");
-    // printf("Give the absolute path to the bmp file that you want to change to mandelbrot set: ");
-    // scanf("%s", filename);
+    printf("Welcome to mandelbrot set generator!\n");
+    printf("Give the absolute path to the bmp file that you want to change to mandelbrot set: ");
+    scanf("%s", filename);
 
     loadBMP(filename);
 
